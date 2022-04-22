@@ -44,6 +44,13 @@
 #define MPU6886_ACCEL_CONFIG2     0x1D
 #define MPU6886_FIFO_EN           0x23
 
+#define MPU6886_RA_XG_OFFS_USRH     0x13 //[15:0] XG_OFFS_USR
+#define MPU6886_RA_XG_OFFS_USRL     0x14
+#define MPU6886_RA_YG_OFFS_USRH     0x15 //[15:0] YG_OFFS_USR
+#define MPU6886_RA_YG_OFFS_USRL     0x16
+#define MPU6886_RA_ZG_OFFS_USRH     0x17 //[15:0] ZG_OFFS_USR
+#define MPU6886_RA_ZG_OFFS_USRL     0x18
+
 //#define G (9.8)
 #define RtA     57.324841
 #define AtR    	0.0174533	
@@ -83,6 +90,18 @@ class MPU6886 {
 
       void getAhrsData(float *pitch,float *roll,float *yaw);
 
+	  // XG_OFFS_USR* registers
+	  int16_t getXGyroOffset();
+	  void setXGyroOffset(int16_t offset);
+	  
+	  // YG_OFFS_USR* register
+	  int16_t getYGyroOffset();
+	  void setYGyroOffset(int16_t offset);
+	  
+	  // ZG_OFFS_USR* register
+	  int16_t getZGyroOffset();
+	  void setZGyroOffset(int16_t offset);
+
     public:
       float aRes, gRes;
 
@@ -91,6 +110,7 @@ class MPU6886 {
     private:
       void I2C_Read_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *read_Buffer);
       void I2C_Write_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t number_Bytes, uint8_t *write_Buffer);
+	  void I2C_Write_Byte(uint8_t driver_Addr, uint8_t start_Addr, uint8_t *write_Buffer);
       void getGres();
       void getAres();
 

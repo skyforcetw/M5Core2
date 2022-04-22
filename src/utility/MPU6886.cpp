@@ -24,6 +24,15 @@ void MPU6886::I2C_Write_NBytes(uint8_t driver_Addr, uint8_t start_Addr, uint8_t 
 
   Wire1.beginTransmission(driver_Addr);
   Wire1.write(start_Addr);
+  Wire1.write((const uint8_t *)write_Buffer,number_Bytes);
+  Wire1.endTransmission();
+
+}
+
+void MPU6886::I2C_Write_Byte(uint8_t driver_Addr, uint8_t start_Addr, uint8_t *write_Buffer){
+
+  Wire1.beginTransmission(driver_Addr);
+  Wire1.write(start_Addr);
   Wire1.write(*write_Buffer);
   Wire1.endTransmission();
 
@@ -249,4 +258,44 @@ void MPU6886::getTempData(float *t){
   getTempAdc(&temp);
   
   *t = (float)temp / 326.8 + 25.0;
+}
+
+int16_t MPU6886::getXGyroOffset() {
+	uint8_t buffer[2];  
+	I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_RA_XG_OFFS_USRH,2,buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];	
+}
+void MPU6886::setXGyroOffset(int16_t offset) {
+	uint8_t buffer[2];  
+	buffer[0] = (offset>>8) & 255;
+	buffer[1] = offset & 255;
+	I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_RA_XG_OFFS_USRH, 2, buffer);		
+}
+
+// YG_OFFS_USR* register
+
+int16_t MPU6886::getYGyroOffset() {
+	uint8_t buffer[2];  
+	I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_RA_YG_OFFS_USRH,2,buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];	
+}
+void MPU6886::setYGyroOffset(int16_t offset) {
+	uint8_t buffer[2];  
+	buffer[0] = (offset>>8) & 255;
+	buffer[1] = offset & 255;
+	I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_RA_YG_OFFS_USRH, 2, buffer);	
+}
+
+// ZG_OFFS_USR* register
+
+int16_t MPU6886::getZGyroOffset() {
+	uint8_t buffer[2];  
+	I2C_Read_NBytes(MPU6886_ADDRESS,MPU6886_RA_ZG_OFFS_USRH,2,buffer);
+	return (((int16_t)buffer[0]) << 8) | buffer[1];	
+}
+void MPU6886::setZGyroOffset(int16_t offset) {
+	uint8_t buffer[2];  
+	buffer[0] = (offset>>8) & 255;
+	buffer[1] = offset & 255;
+	I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_RA_ZG_OFFS_USRH, 2, buffer);	
 }
